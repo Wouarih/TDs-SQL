@@ -126,5 +126,29 @@ SELECT idClient, nomClient, prenomClient FROM Clients c
 
 --R81
 
+SELECT DISTINCT nomService FROM Services s
+	JOIN Proposer p ON s.idService = p.idService
+	JOIN Bungalows b ON p.idBungalow = b.idBungalow
+	WHERE superficieBungalow > 60
+	GROUP BY nomService, s.idService
+	HAVING COUNT(*) = (SELECT COUNT(*)
+		FROM Bungalows b
+		WHERE superficieBungalow > 60);
+
+-- R81 NOT EXISTS
+
+SELECT nomService FROM Services s
+	WHERE NOT EXISTS (SELECT idBungalow
+					FROM Bungalows
+					WHERE superficieBungalow > 60
+					MINUS
+					SELECT idBungalow
+					FROM Proposer p
+					WHERE p.idService = s.idService);
+
+--R82
+
+
+
 
 			
