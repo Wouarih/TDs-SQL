@@ -148,6 +148,37 @@ SELECT nomService FROM Services s
 
 --R82
 
+SELECT nomService FROM Services	s
+	JOIN Proposer p ON s.idService = p.idService
+		WHERE idBungalow IN (SELECT idBungalow FROM Bungalows b
+								JOIN Campings c ON b.idCamping = c.idCamping
+								WHERE nomCamping = 'Les Flots Bleus'
+							AND superficieBungalow = (SELECT MAX(superficieBungalow) 
+								FROM Bungalows b
+								JOIN Campings c ON b.idCamping = c.idCamping
+									WHERE nomCamping = 'Les Flots Bleus'));
+
+--R83
+
+SELECT e.nomEmploye, e.prenomEmploye, COUNT(sub.idEmploye) AS nbSubordonnes
+FROM Employes e
+		JOIN Campings c ON e.idCamping = c.idCamping
+		LEFT JOIN Employes sub ON sub.idEmployeChef = e.idEmploye 
+WHERE nomCamping = 'La Décharge Monochrome'
+GROUP BY e.nomEmploye, e.prenomEmploye, e.idEmploye;
+
+--R84
+
+SELECT nomCamping FROM Campings c
+	WHERE NOT EXISTS (SELECT idBungalow
+					FROM Bungalows b
+					WHERE b.idCamping = c.idCamping
+					MINUS
+					SELECT idBungalow
+					FROM Bungalows b
+					WHERE superficieBungalow > 50);
+	
+
 
 
 
