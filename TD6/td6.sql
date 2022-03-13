@@ -75,4 +75,20 @@ DELETE FROM EmployesAvecCamping WHERE prenomEmploye ='Aude';
 
 CREATE VIEW ClientsParVille(ville, nbClient) AS
 	SELECT villeClient, COUNT(idClient)
-	FROM
+	FROM Clients c
+	GROUP BY villeClient;
+
+--Impossible d'insérer des lignes car la vue utilise la fonction COUNT et la requête contient un GROUP BY
+
+INSERT INTO ClientsParVille VALUES ('Rodez', 3);
+
+UPDATE ClientsParVille SET ville = 'MTP' WHERE ville = 'Montpellier';
+
+DELETE FROM ClientsParVille WHERE nbClient = 2;
+
+--6
+
+CREATE VIEW BungalowsEtCampings (idBungalow, nomBungalow, superficieBungalow, idCamping, nomCamping) AS
+	SELECT idBungalow, nomBungalow, superficieBungalow, b.idCamping, nomCamping
+	FROM Bungalows b
+	JOIN Campings c ON b.idCamping =c.idCamping;
